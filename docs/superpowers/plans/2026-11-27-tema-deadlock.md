@@ -1,14 +1,14 @@
-# Tema Refresher League Implementation Plan
+# Tema Deadlock Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Deixar a janela Tkinter do app com as cores da Refresher League (verde-escuro e dourado) e corrigir o bug do `run_bg`.
+**Goal:** Deixar a janela Tkinter do app com o tema Deadlock (verde-escuro e dourado) e corrigir o bug do `run_bg`.
 
 **Architecture:** Um módulo novo `dlh/theme.py` concentra a paleta e configura o tema `clam` do ttk; `app.py` passa a chamar `theme.apply(self)` e usa as cores do módulo nos widgets `tk` puros (status ✔/✖, caixa de mensagens).
 
 **Tech Stack:** Python 3.13, Tkinter/ttk (tema `clam`), `unittest` da biblioteca padrão.
 
-**Spec:** `docs/superpowers/specs/2026-11-27-tema-refresher-league-design.md`
+**Spec:** `docs/superpowers/specs/2026-11-27-tema-deadlock-design.md`
 
 ## Global Constraints
 
@@ -43,7 +43,7 @@
 - [ ] **Step 2: Run test to verify it fails** — `.venv\Scripts\python -m unittest tests.test_theme -v` → FAIL (`No module named 'dlh.theme'`).
 - [ ] **Step 3: Implement `dlh/theme.py`** — `apply` usa `theme_use("clam")`, `configure` + `map` para TFrame, TLabel, TButton, Gold.TButton, TEntry, TSpinbox, TCombobox, TNotebook/TNotebook.Tab (aba ativa com texto dourado), Treeview/Treeview.Heading (seleção `#C18D52` com texto `#081B1B`), TScrollbar, TProgressbar (barra dourada), TLabelframe, TSeparator; `insertcolor` creme nos campos; `option_add("*TCombobox*Listbox.*", ...)` para o popup. `dark_titlebar` chama `DwmSetWindowAttribute(hwnd, 20, 1)` via ctypes em `try/except` (sem efeito fora do Windows 10/11).
 - [ ] **Step 4: Run test to verify it passes** — mesmo comando → OK.
-- [ ] **Step 5: Commit** — `git add dlh/theme.py tests/test_theme.py && git commit -m "Tema Refresher League: módulo de cores"`.
+- [ ] **Step 5: Commit** — `git add dlh/theme.py tests/test_theme.py && git commit -m "Tema Deadlock: módulo de cores"`.
 
 ### Task 2: Aplicar o tema no app e corrigir o run_bg
 
@@ -61,7 +61,7 @@
 - [ ] **Step 2: Run** `.venv\Scripts\python -m unittest tests.test_app_ui -v` → FAIL.
 - [ ] **Step 3: Implement** — trocar `GREEN, RED, GRAY` por `PALETTE["muted"], PALETTE["error"], PALETTE["muted"]`; chamar `theme.apply(self)` e `theme.dark_titlebar(self)` no lugar do bloco `vista`; título com `Title.TLabel` (dourado) e subtítulo com `Sub.TLabel`; `foreground=GRAY` dos rótulos vira `style="Muted.TLabel"`; `Big.TButton` vira `Gold.TButton` (os três botões principais); `logbox` com `height=4`, `background=card`, `foreground=muted`, `insertbackground=text`, `relief="flat"`, `highlightthickness=0`; `_status` com `bg=PALETTE["bg"]`. No `run_bg`, capturar a mensagem em variável local (`msg = f"Erro: {e}"`) antes do `lambda`.
 - [ ] **Step 4: Run** os dois arquivos de teste → OK.
-- [ ] **Step 5: Commit** — `git add app.py tests/test_app_ui.py && git commit -m "Tema Refresher League na janela e correção do erro do run_bg"`.
+- [ ] **Step 5: Commit** — `git add app.py tests/test_app_ui.py && git commit -m "Tema Deadlock na janela e correção do erro do run_bg"`.
 
 ### Task 3: Conferência visual
 

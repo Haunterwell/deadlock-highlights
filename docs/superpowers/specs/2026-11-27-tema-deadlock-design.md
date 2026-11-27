@@ -1,9 +1,9 @@
-# Tema Refresher League no app (Tkinter) — design curto
+# Tema Deadlock no app (Tkinter) — design curto
 
 **Aprovado em:** 2026-11-27
 
 ## Intenção
-Deixar o Deadlock Highlights com a cara da Refresher League (refresherleague.com.br): verde-escuro e dourado, em vez da janela cinza padrão do Windows.
+Deixar o Deadlock Highlights com o tema Deadlock: verde-escuro e dourado, em vez da janela cinza padrão do Windows.
 
 ## Objetivos
 - Paleta do site em toda a janela: fundo `#081B1B`, cartões `#203B37`, borda `#2f524c`, texto creme `#EEE8B2`, rótulos menta `#96CDB0`, dourado `#C18D52` (hover `#d6a873`), texto sobre dourado `#081B1B`, erro `#ef8a74`.
