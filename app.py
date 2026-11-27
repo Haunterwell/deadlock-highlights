@@ -17,7 +17,7 @@ from dlh.analyze import find_highlights
 from dlh.theme import PALETTE
 
 APP_NAME = "Deadlock Highlights"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 OK, BAD, WAIT = "✔", "✖", "…"
 GREEN, RED, GRAY = PALETTE["muted"], PALETTE["error"], PALETTE["muted"]
 

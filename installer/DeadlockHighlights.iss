@@ -1,7 +1,7 @@
 ; Instalador do Deadlock Highlights (Inno Setup 6)
 ; Gere com build.bat, que primeiro cria o .exe com o PyInstaller.
 #define AppName "Deadlock Highlights"
-#define AppVersion "1.0.1"
+#define AppVersion "1.0.2"
 #ifndef DistDir
   #define DistDir "..\build\dist\DeadlockHighlights"
 #endif
