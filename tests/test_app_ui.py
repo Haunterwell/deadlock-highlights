@@ -1,13 +1,21 @@
 import contextlib
 import io
-import time
+import queue
 import unittest
+from unittest import mock
 
 import app as app_module
+from dlh import game as gm
 
 
 class AppUiTests(unittest.TestCase):
     def setUp(self):
+        # sem efeitos colaterais: nada de OBS, jogo ou escrita da config real
+        for target, name in ((app_module.App, "check_all"), (app_module.App, "refresh_replays"),
+                             (gm, "save_config")):
+            p = mock.patch.object(target, name)
+            p.start()
+            self.addCleanup(p.stop)
         self.app = app_module.App()
         self.app.withdraw()
 
@@ -34,13 +42,12 @@ class AppUiTests(unittest.TestCase):
         a = self.app
         with contextlib.redirect_stdout(io.StringIO()):  # run_bg imprime o traceback
             a.run_bg(lambda: 1 / 0)
-            deadline = time.time() + 2
-            while time.time() < deadline:
-                a.update()
-                if "Erro: division by zero" in a.logbox.get("1.0", "end"):
-                    break
-                time.sleep(0.05)
-            a.update()
+            # o worker enfileira 2 itens (log e print); drena sem depender do relogio/after
+            for _ in range(2):
+                try:
+                    a.q.get(timeout=10)()
+                except queue.Empty:
+                    self.fail("o worker nao enfileirou o erro")
         self.assertIn("Erro: division by zero", a.logbox.get("1.0", "end"))
 
 
