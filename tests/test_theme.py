@@ -3,7 +3,7 @@ import unittest
 from tkinter import ttk
 
 from dlh import theme
-from dlh.theme import PALETTE, apply
+from dlh.theme import PALETTE, SELECT_BG, apply
 
 
 class ThemeTests(unittest.TestCase):
@@ -38,6 +38,20 @@ class ThemeTests(unittest.TestCase):
         style = apply(self.root)
         self.assertEqual(
             style.lookup("TButton", "foreground", ["disabled"]), PALETTE["line"])
+
+    def test_plain_button_gold_outline(self):
+        style = apply(self.root)
+        self.assertEqual(style.lookup("TButton", "bordercolor"), PALETTE["gold"])
+        self.assertEqual(
+            style.lookup("TButton", "bordercolor", ["disabled"]), PALETTE["line"])
+
+    def test_selection_is_darkened_gold(self):
+        style = apply(self.root)
+        self.assertEqual(SELECT_BG, "#8a6438")
+        self.assertEqual(
+            style.lookup("Treeview", "background", ["selected"]), "#8a6438")
+        self.assertEqual(
+            style.lookup("Treeview", "foreground", ["selected"]), PALETTE["text"])
 
     def test_combobox_popup_dark(self):
         apply(self.root)

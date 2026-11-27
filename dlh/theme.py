@@ -14,6 +14,8 @@ PALETTE = {
     "error": "#ef8a74",
 }
 
+SELECT_BG = "#8a6438"  # dourado escurecido (selecao)
+
 FONT = "Segoe UI"
 FONT_BOLD = "Segoe UI Semibold"
 
@@ -49,11 +51,12 @@ def apply(root: tk.Tk) -> ttk.Style:
                     foreground=p["gold"], font=(FONT_BOLD, 10))
 
     style.configure("TButton", background=p["card"], foreground=p["text"],
-                    bordercolor=p["line"], padding=(10, 5))
+                    bordercolor=p["gold"], padding=(10, 5))
     style.map("TButton",
               background=[("disabled", p["bg"]), ("pressed", p["line"]),
                           ("active", p["line"])],
-              foreground=[("disabled", p["line"])])
+              foreground=[("disabled", p["line"])],
+              bordercolor=[("disabled", p["line"])])
     style.configure("Gold.TButton", background=p["gold"],
                     foreground=p["on_gold"], bordercolor=p["gold"],
                     font=(FONT_BOLD, 10), padding=(12, 6))
@@ -89,8 +92,8 @@ def apply(root: tk.Tk) -> ttk.Style:
     style.configure("Treeview", background=p["card"], fieldbackground=p["card"],
                     foreground=p["text"], bordercolor=p["line"], rowheight=24)
     style.map("Treeview",
-              background=[("selected", p["gold"])],
-              foreground=[("selected", p["on_gold"])])
+              background=[("selected", SELECT_BG)],
+              foreground=[("selected", p["text"])])
     style.configure("Treeview.Heading", background=p["bg"],
                     foreground=p["gold"], font=(FONT_BOLD, 10),
                     bordercolor=p["line"])
@@ -103,11 +106,11 @@ def apply(root: tk.Tk) -> ttk.Style:
                     troughcolor=p["card"], bordercolor=p["line"])
     style.configure("TSeparator", background=p["line"])
 
-    # Popup da Combobox e Listbox/Text classicos (nao sao ttk).
+    # Popup da Combobox: a lista interna e um tk.Listbox classico (nao ttk).
     root.option_add("*TCombobox*Listbox.background", p["card"])
     root.option_add("*TCombobox*Listbox.foreground", p["text"])
-    root.option_add("*TCombobox*Listbox.selectBackground", p["gold"])
-    root.option_add("*TCombobox*Listbox.selectForeground", p["on_gold"])
+    root.option_add("*TCombobox*Listbox.selectBackground", SELECT_BG)
+    root.option_add("*TCombobox*Listbox.selectForeground", p["text"])
     root.option_add("*TCombobox*Listbox.font", base)
     return style
 
