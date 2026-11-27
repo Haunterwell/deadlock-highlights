@@ -12,12 +12,14 @@ from tkinter import filedialog, messagebox, ttk
 
 from dlh import game as gm
 from dlh import recorder
+from dlh import theme
 from dlh.analyze import find_highlights
+from dlh.theme import PALETTE
 
 APP_NAME = "Deadlock Highlights"
 VERSION = "1.0.1"
 OK, BAD, WAIT = "✔", "✖", "…"
-GREEN, RED, GRAY = "#1f8b4c", "#c0392b", "#7f8c8d"
+GREEN, RED, GRAY = PALETTE["muted"], PALETTE["error"], PALETTE["muted"]
 
 
 class App(tk.Tk):
@@ -40,19 +42,13 @@ class App(tk.Tk):
         self.stop = threading.Event()
         self.busy = False
 
-        style = ttk.Style(self)
-        try:
-            style.theme_use("vista")
-        except tk.TclError:
-            pass
-        style.configure("Title.TLabel", font=("Segoe UI", 15, "bold"))
-        style.configure("Step.TLabel", font=("Segoe UI", 10, "bold"))
-        style.configure("Big.TButton", font=("Segoe UI", 10, "bold"), padding=6)
+        theme.apply(self)
+        theme.dark_titlebar(self)
 
         top = ttk.Frame(self, padding=(12, 10, 12, 0))
         top.pack(fill="x")
         ttk.Label(top, text=APP_NAME, style="Title.TLabel").pack(side="left")
-        ttk.Label(top, text="multi-kills do replay  →  clipes no OBS", foreground=GRAY).pack(side="left", padx=12)
+        ttk.Label(top, text="multi-kills do replay  →  clipes no OBS", style="Sub.TLabel").pack(side="left", padx=12)
 
         self.nb = ttk.Notebook(self)
         self.nb.pack(fill="both", expand=True, padx=12, pady=8)
@@ -61,8 +57,9 @@ class App(tk.Tk):
 
         logf = ttk.LabelFrame(self, text="Mensagens", padding=6)
         logf.pack(fill="x", padx=12, pady=(0, 10))
-        self.logbox = tk.Text(logf, height=7, wrap="word", font=("Consolas", 9), state="disabled",
-                              background="#fbfbfb", relief="flat")
+        self.logbox = tk.Text(logf, height=4, wrap="word", font=("Consolas", 9), state="disabled",
+                              background=PALETTE["card"], foreground=PALETTE["muted"],
+                              insertbackground=PALETTE["text"], relief="flat", highlightthickness=0)
         self.logbox.pack(fill="x")
 
         self.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -96,7 +93,8 @@ class App(tk.Tk):
                     self.q.put(lambda: done(r))
             except Exception as e:
                 tb = traceback.format_exc()
-                self.q.put(lambda: self._log(f"Erro: {e}"))
+                msg = f"Erro: {e}"
+                self.q.put(lambda: self._log(msg))
                 self.q.put(lambda: print(tb))
                 if done:
                     self.q.put(lambda: done(None))
@@ -135,7 +133,8 @@ class App(tk.Tk):
 
     # ================================================================ aba 1: preparar
     def _status(self, parent, row):
-        lbl = tk.Label(parent, text=WAIT, fg=GRAY, font=("Segoe UI Symbol", 13, "bold"), width=2)
+        lbl = tk.Label(parent, text=WAIT, fg=GRAY, bg=PALETTE["bg"],
+                       font=("Segoe UI Symbol", 13, "bold"), width=2)
         lbl.grid(row=row, column=0, sticky="nw", padx=(0, 8), pady=6)
         return lbl
 
@@ -149,7 +148,7 @@ class App(tk.Tk):
         f.columnconfigure(1, weight=1)
         r = 0
         ttk.Label(f, text="Faça isto uma vez. Quando tudo estiver com ✔, vá para a aba 2.",
-                  foreground=GRAY).grid(row=r, column=0, columnspan=3, sticky="w", pady=(0, 6))
+                  style="Muted.TLabel").grid(row=r, column=0, columnspan=3, sticky="w", pady=(0, 6))
 
         # --- pasta do jogo
         r += 1
@@ -163,7 +162,7 @@ class App(tk.Tk):
         ttk.Entry(row, textvariable=self.v_dir).pack(side="left", fill="x", expand=True)
         ttk.Button(row, text="Procurar…", command=self.pick_dir).pack(side="left", padx=4)
         ttk.Button(row, text="Achar sozinho", command=self.auto_dir).pack(side="left")
-        ttk.Label(box, text=r"É a pasta ...\steamapps\common\Deadlock\game\citadel", foreground=GRAY).pack(anchor="w")
+        ttk.Label(box, text=r"É a pasta ...\steamapps\common\Deadlock\game\citadel", style="Muted.TLabel").pack(anchor="w")
 
         # --- jogo aberto com -condebug
         r += 1
@@ -171,7 +170,7 @@ class App(tk.Tk):
         box = ttk.Frame(f)
         box.grid(row=r, column=1, sticky="ew", pady=6)
         ttk.Label(box, text="Deadlock aberto com a opção -condebug", style="Step.TLabel").pack(anchor="w")
-        self.d_run = ttk.Label(box, text="", foreground=GRAY, wraplength=640, justify="left")
+        self.d_run = ttk.Label(box, text="", style="Muted.TLabel", wraplength=640, justify="left")
         self.d_run.pack(anchor="w")
         ttk.Button(f, text="Abrir o Deadlock com -condebug", command=self.launch_game).grid(row=r, column=2, sticky="ne", pady=6)
 
@@ -181,7 +180,7 @@ class App(tk.Tk):
         box = ttk.Frame(f)
         box.grid(row=r, column=1, sticky="ew", pady=6)
         ttk.Label(box, text="Tecla de comando no jogo", style="Step.TLabel").pack(anchor="w")
-        self.d_bind = ttk.Label(box, text="", foreground=GRAY, wraplength=640, justify="left")
+        self.d_bind = ttk.Label(box, text="", style="Muted.TLabel", wraplength=640, justify="left")
         self.d_bind.pack(anchor="w")
         ttk.Button(f, text="Copiar o comando", command=self.copy_bind).grid(row=r, column=2, sticky="ne", pady=6)
 
@@ -203,7 +202,7 @@ class App(tk.Tk):
         ttk.Label(row, text="Senha").pack(side="left")
         ttk.Entry(row, textvariable=self.v_pass, width=22, show="•").pack(side="left", padx=4)
         self.d_obs = ttk.Label(box, text="No OBS: Ferramentas → Configurações do servidor WebSocket → "
-                                         "Mostrar informações de conexão.", foreground=GRAY, wraplength=640)
+                                         "Mostrar informações de conexão.", style="Muted.TLabel", wraplength=640)
         self.d_obs.pack(anchor="w")
         ttk.Button(f, text="Testar conexão", command=self.check_obs).grid(row=r, column=2, sticky="ne", pady=6)
 
@@ -219,14 +218,14 @@ class App(tk.Tk):
         ttk.Label(row, text="Nome da cena").pack(side="left")
         ttk.Entry(row, textvariable=self.v_scene, width=28).pack(side="left", padx=4)
         self.d_scene = ttk.Label(box, text="O app troca para esta cena só enquanto grava e depois volta.",
-                                 foreground=GRAY, wraplength=640)
+                                 style="Muted.TLabel", wraplength=640)
         self.d_scene.pack(anchor="w")
         ttk.Button(f, text="Criar / conferir cena", command=self.make_scene).grid(row=r, column=2, sticky="ne", pady=6)
 
         r += 1
         ttk.Separator(f).grid(row=r, column=0, columnspan=3, sticky="ew", pady=10)
         r += 1
-        ttk.Button(f, text="Verificar tudo de novo", style="Big.TButton",
+        ttk.Button(f, text="Verificar tudo de novo", style="Gold.TButton",
                    command=self.check_all).grid(row=r, column=0, columnspan=3, sticky="w")
 
     def pick_dir(self):
@@ -394,10 +393,10 @@ class App(tk.Tk):
                                  ("Gravar antes (s)", self.v_before, 2, 30), ("Gravar depois (s)", self.v_after, 1, 30)):
             ttk.Label(opt, text=txt).pack(side="left")
             ttk.Spinbox(opt, from_=lo, to=hi, textvariable=var, width=4).pack(side="left", padx=(4, 12))
-        self.b_analyze = ttk.Button(opt, text="Achar destaques", style="Big.TButton", command=self.analyze)
+        self.b_analyze = ttk.Button(opt, text="Achar destaques", style="Gold.TButton", command=self.analyze)
         self.b_analyze.pack(side="right")
 
-        self.l_summary = ttk.Label(f, text="Escolha um replay e clique em Achar destaques.", foreground=GRAY)
+        self.l_summary = ttk.Label(f, text="Escolha um replay e clique em Achar destaques.", style="Muted.TLabel")
         self.l_summary.grid(row=2, column=0, sticky="w")
 
         # tabela
@@ -423,7 +422,7 @@ class App(tk.Tk):
         rec.grid(row=4, column=0, sticky="ew", pady=(6, 0))
         ttk.Button(rec, text="Selecionar todos", command=lambda: self.tree.selection_set(self.tree.get_children())).pack(side="left")
         ttk.Button(rec, text="Abrir este replay no jogo", command=self.open_demo).pack(side="left", padx=6)
-        self.b_rec = ttk.Button(rec, text="●  Gravar selecionados", style="Big.TButton", command=self.record)
+        self.b_rec = ttk.Button(rec, text="●  Gravar selecionados", style="Gold.TButton", command=self.record)
         self.b_rec.pack(side="left", padx=6)
         self.b_stop = ttk.Button(rec, text="Parar", command=self.stop_rec, state="disabled")
         self.b_stop.pack(side="left")
