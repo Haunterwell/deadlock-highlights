@@ -4,7 +4,10 @@
 
 <p align="center">Acha os multi-kills de um replay do <b>Deadlock</b> e grava cada lance no <b>OBS</b>, com a câmera em quem matou.</p>
 
-<p align="center"><a href="../../releases/latest"><b>⬇ Baixar o instalador</b></a> · <a href="#tutorial">Tutorial</a> · <a href="#problemas-comuns">Problemas comuns</a></p>
+<p align="center"><a href="../../releases"><b>⬇ Baixar o instalador</b></a> · <a href="#tutorial">Tutorial</a> · <a href="#problemas-comuns">Problemas comuns</a></p>
+
+> [!WARNING]
+> **Projeto em desenvolvimento (work in progress).** Esta é uma versão inicial: a busca de destaques já funciona, mas a gravação automática ainda está sendo testada e pode falhar ou mudar. Se encontrar um problema, abra uma [issue](../../issues).
 
 ---
 
@@ -30,7 +33,7 @@ Não precisa instalar Python: vem tudo no instalador.
 
 ### 1. Instalar
 
-1. Baixe `DeadlockHighlights-Setup-x.y.z.exe` em [Releases](../../releases/latest).
+1. Baixe `DeadlockHighlights-Setup-x.y.z.exe` em [Releases](../../releases).
 2. Rode o instalador. Ele não pede senha de administrador.
 3. Abra o **Deadlock Highlights** pelo atalho da Área de Trabalho ou do Menu Iniciar.
 
