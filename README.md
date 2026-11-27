@@ -14,8 +14,8 @@
 ## O que faz
 
 1. Você baixa o replay de uma partida no Deadlock (arquivo `.dem`).
-2. O app lê todos os abates e lista cada vez que um jogador fez **2 ou mais abates em até 20 segundos** (dá para mudar).
-3. Para cada lance escolhido, o app volta o replay alguns segundos antes, trava a câmera no jogador, liga a gravação do OBS e desliga logo depois do último abate.
+2. O app lê todos os abates e lista cada vez que um jogador fez **2 ou mais abates em até 20 segundos**. Dá para mudar a quantidade e também exigir assistências (ex.: 1 abate + 1 assistência).
+3. Para cada lance escolhido, o app volta o replay alguns segundos antes, trava a câmera no jogador, liga a gravação do OBS, desliga logo depois do último abate e pausa o replay.
 
 Cada clipe sai com um nome que diz o que é, por exemplo `144195658_03_16-17_jogador_2kills.mp4`: partida, número do lance, tempo, jogador e abates.
 
@@ -70,7 +70,8 @@ bind F10 "exec dlh_cmd"
 
 | Opção | Padrão | O que muda |
 |---|---|---|
-| Abates mínimos | 2 | Quantos abates do mesmo jogador formam um destaque (3 = só triple kills). |
+| Abates | 2 | Quantos abates o jogador precisa fazer (3 = só triple kills). |
+| + Assistências | 0 | Quantas assistências ele precisa dar na mesma sequência. Com 0, assistências não contam. Ex.: Abates 1 + Assistências 1 = um abate e uma assistência em até 20 s. |
 | em até (s) | 20 | Tempo máximo entre um abate e o próximo. |
 | Gravar antes (s) | 8 | Quanto o clipe começa antes do primeiro abate (clique em *Achar destaques* de novo depois de mudar). |
 | Gravar depois (s) | 4 | Quanto o clipe continua depois do último abate. |

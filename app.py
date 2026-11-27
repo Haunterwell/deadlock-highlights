@@ -15,7 +15,7 @@ from dlh import recorder
 from dlh.analyze import find_highlights
 
 APP_NAME = "Deadlock Highlights"
-VERSION = "1.0"
+VERSION = "1.0.1"
 OK, BAD, WAIT = "✔", "✖", "…"
 GREEN, RED, GRAY = "#1f8b4c", "#c0392b", "#7f8c8d"
 
@@ -114,12 +114,16 @@ class App(tk.Tk):
             self.cfg["obs_port"] = 4455
         self.cfg["obs_password"] = self.v_pass.get()
         self.cfg["obs_scene"] = self.v_scene.get().strip() or "Deadlock Highlights"
-        for k, v in (("window_s", self.v_window), ("min_kills", self.v_min),
+        for k, v in (("window_s", self.v_window), ("min_kills", self.v_min), ("min_assists", self.v_assists),
                      ("before_s", self.v_before), ("after_s", self.v_after)):
             try:
-                self.cfg[k] = float(v.get()) if k != "min_kills" else int(float(v.get()))
+                val = float(v.get())
+                self.cfg[k] = max(0, int(val)) if k in ("min_kills", "min_assists") else val
             except ValueError:
                 pass
+        if self.cfg["min_kills"] + self.cfg["min_assists"] < 1:
+            self.cfg["min_kills"] = 1
+            self.v_min.set("1")
         gm.save_config(self.cfg)
 
     def _on_close(self):
@@ -384,10 +388,12 @@ class App(tk.Tk):
         self.v_window = tk.StringVar(value=str(self.cfg["window_s"]))
         self.v_before = tk.StringVar(value=str(self.cfg["before_s"]))
         self.v_after = tk.StringVar(value=str(self.cfg["after_s"]))
-        for txt, var, lo, hi in (("Abates mínimos", self.v_min, 2, 6), ("em até (s)", self.v_window, 5, 60),
+        self.v_assists = tk.StringVar(value=str(self.cfg.get("min_assists", 0)))
+        for txt, var, lo, hi in (("Abates", self.v_min, 0, 8), ("+ Assistências", self.v_assists, 0, 8),
+                                 ("em até (s)", self.v_window, 5, 60),
                                  ("Gravar antes (s)", self.v_before, 2, 30), ("Gravar depois (s)", self.v_after, 1, 30)):
             ttk.Label(opt, text=txt).pack(side="left")
-            ttk.Spinbox(opt, from_=lo, to=hi, textvariable=var, width=5).pack(side="left", padx=(4, 14))
+            ttk.Spinbox(opt, from_=lo, to=hi, textvariable=var, width=4).pack(side="left", padx=(4, 12))
         self.b_analyze = ttk.Button(opt, text="Achar destaques", style="Big.TButton", command=self.analyze)
         self.b_analyze.pack(side="right")
 
@@ -399,10 +405,11 @@ class App(tk.Tk):
         tf.grid(row=3, column=0, sticky="nsew", pady=4)
         tf.columnconfigure(0, weight=1)
         tf.rowconfigure(0, weight=1)
-        cols = ("n", "clock", "player", "hero", "kills", "span", "victims")
+        cols = ("n", "clock", "player", "hero", "kills", "assists", "span", "victims")
         self.tree = ttk.Treeview(tf, columns=cols, show="headings", selectmode="extended")
         for c, t, w, a in (("n", "#", 40, "center"), ("clock", "Tempo", 70, "center"), ("player", "Jogador", 170, "w"),
                            ("hero", "Herói", 110, "w"), ("kills", "Abates", 60, "center"),
+                           ("assists", "Assist.", 60, "center"),
                            ("span", "Em (s)", 60, "center"), ("victims", "Vítimas", 360, "w")):
             self.tree.heading(c, text=t)
             self.tree.column(c, width=w, anchor=a, stretch=(c == "victims"))
@@ -479,7 +486,8 @@ class App(tk.Tk):
         t0 = time.time()
 
         def work():
-            return find_highlights(p, cfg["window_s"], cfg["min_kills"], cfg["before_s"])
+            return find_highlights(p, cfg["window_s"], cfg["min_kills"], cfg["before_s"],
+                                   cfg.get("min_assists", 0))
 
         def done(res):
             self.b_analyze.configure(state="normal")
@@ -489,11 +497,15 @@ class App(tk.Tk):
             self.analysis = res
             self.tree.delete(*self.tree.get_children())
             for i, h in enumerate(res["highlights"]):
-                self.tree.insert("", "end", iid=str(i), values=(i + 1, h["clock"], h["player"], h["hero"], h["kills"],
-                                                               h["span_s"], ", ".join(h["victims"])))
+                self.tree.insert("", "end", iid=str(i), values=(
+                    i + 1, h["clock"], h["player"], h["hero"], h["kills"], h.get("assists", 0),
+                    h["span_s"], ", ".join(h["victims"])))
             self.tree.selection_set(self.tree.get_children())
+            what = f"{cfg['min_kills']}+ abates"
+            if cfg.get("min_assists", 0):
+                what += f" e {cfg['min_assists']}+ assistências"
             msg = (f"Partida {res['match']}: {res['total_kills']} abates, {len(res['highlights'])} destaques "
-                   f"({cfg['min_kills']}+ abates em até {cfg['window_s']:g} s). Lido em {time.time() - t0:.0f} s.")
+                   f"({what} em até {cfg['window_s']:g} s). Lido em {time.time() - t0:.0f} s.")
             self.l_summary.configure(text=msg)
             self.log(msg)
 

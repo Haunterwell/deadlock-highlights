@@ -214,6 +214,7 @@ DEFAULTS = {
     "obs_scene": "Deadlock Highlights",
     "window_s": 20,
     "min_kills": 2,
+    "min_assists": 0,
     "before_s": 8,
     "after_s": 4,
 }

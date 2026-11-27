@@ -75,7 +75,9 @@ def record(game, cfg, analysis, chosen, log, stop, progress=None):
                 break
             h = analysis["highlights"][idx]
             n = idx + 1
-            log(f"[{count}/{len(chosen)}] #{n} {h['clock']} {h['player']} ({h['hero']}) - {h['kills']} abates")
+            assists = h.get("assists", 0)
+            log(f"[{count}/{len(chosen)}] #{n} {h['clock']} {h['player']} ({h['hero']}) - {h['kills']} abates"
+                + (f", {assists} assist." if assists else ""))
             if progress:
                 progress(count - 1, len(chosen))
             pos = game.log_pos()
@@ -95,11 +97,15 @@ def record(game, cfg, analysis, chosen, log, stop, progress=None):
             while time.time() < end and not stop.is_set():
                 time.sleep(0.2)
             out = obs.call("StopRecord").get("outputPath", "")
+            try:
+                game.send("demo_pause")  # congela o replay entre um clipe e outro (e no fim)
+            except RuntimeError as e:
+                log(f"   nao consegui pausar a demo: {e}")
             time.sleep(1.5)
             if out and Path(out).exists():
                 dest = Path(out).with_name(
                     f"{match}_{n:02d}_{h['clock'].replace(':', '-')}_{safe(h['player'])}_{h['kills']}kills"
-                    f"{Path(out).suffix}")
+                    + (f"_{assists}assists" if assists else "") + Path(out).suffix)
                 for _ in range(10):
                     try:
                         Path(out).rename(dest)

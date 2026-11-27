@@ -102,9 +102,9 @@ footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px
 
   <main>
     <header>
-      <p class="eyebrow">Tutorial · versão 1.0</p>
+      <p class="eyebrow">Tutorial · versão 1.0.1</p>
       <h1>Deadlock Highlights</h1>
-      <p class="lede">Um app para Windows que lê o replay de uma partida do Deadlock, acha todo momento em que um jogador fez 2 ou mais abates em poucos segundos e grava cada lance no OBS, com a câmera em quem matou.</p>
+      <p class="lede">Um app para Windows que lê o replay de uma partida do Deadlock, acha todo momento em que um jogador fez 2 ou mais abates (ou a combinação de abates e assistências que você escolher) em poucos segundos e grava cada lance no OBS, com a câmera em quem matou.</p>
       <div class="flow" aria-label="Como funciona">
         <div><b>1. Replay</b><span>Você baixa a partida no Deadlock (arquivo .dem).</span></div>
         <div><b>2. Destaques</b><span>O app lê todos os abates e lista os double kills.</span></div>
@@ -127,7 +127,7 @@ footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px
 
     <h2 id="instalar">Instalar</h2>
     <ol class="steps">
-      <li><strong>Baixe o instalador</strong>Na página do projeto no GitHub, abra <b>Releases</b> e baixe <code>DeadlockHighlights-Setup-1.0.0.exe</code>.</li>
+      <li><strong>Baixe o instalador</strong>Na página do projeto no GitHub, abra <b>Releases</b> e baixe <code>DeadlockHighlights-Setup-1.0.1.exe</code>.</li>
       <li><strong>Rode o instalador</strong>Dê dois cliques, escolha se quer o atalho na Área de Trabalho e clique em <b>Instalar</b>. Não pede senha de administrador.</li>
       <li><strong>Abra o app</strong>Pelo atalho <b>Deadlock Highlights</b> na Área de Trabalho ou no Menu Iniciar. O tutorial também fica no Menu Iniciar.</li>
     </ol>
@@ -159,7 +159,7 @@ footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px
         <div class="cmd"><code id="democmd">playdemo replays/144195658</code><button type="button" data-copy="democmd">Copiar</button></div>
         Troque o número pelo da sua partida. Espere carregar e <b>feche o console</b>.
       </li>
-      <li><strong>Selecione e grave</strong>Escolha as linhas (<kbd>Ctrl</kbd>/<kbd>Shift</kbd> para várias, ou <b>Selecionar todos</b>) e clique em <b>Gravar selecionados</b>. Não use o mouse nem o teclado enquanto grava: o app aperta a tecla de comando no jogo. Para interromper, clique em <b>Parar</b>.</li>
+      <li><strong>Selecione e grave</strong>Escolha as linhas (<kbd>Ctrl</kbd>/<kbd>Shift</kbd> para várias, ou <b>Selecionar todos</b>) e clique em <b>Gravar selecionados</b>. Não use o mouse nem o teclado enquanto grava: o app aperta a tecla de comando no jogo. Para interromper, clique em <b>Parar</b>. Depois de cada clipe o replay fica pausado.</li>
       <li><strong>Pegue os clipes</strong>Eles vão para a pasta de gravação do OBS. O botão <b>Abrir pasta dos vídeos</b> leva até lá.</li>
     </ol>
 
@@ -168,7 +168,8 @@ footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px
       <table>
         <thead><tr><th>Opção</th><th>Padrão</th><th>O que muda</th></tr></thead>
         <tbody>
-          <tr><td>Abates mínimos</td><td>2</td><td>Quantos abates do mesmo jogador formam um destaque. Use 3 para só triple kills.</td></tr>
+          <tr><td>Abates</td><td>2</td><td>Quantos abates o jogador precisa fazer. Use 3 para só triple kills.</td></tr>
+          <tr><td>+ Assistências</td><td>0</td><td>Quantas assistências ele precisa dar na mesma sequência. Com 0, assistências não contam. Abates 1 + Assistências 1 = um abate e uma assistência.</td></tr>
           <tr><td>em até (s)</td><td>20</td><td>Tempo máximo entre um abate e o próximo para contarem juntos.</td></tr>
           <tr><td>Gravar antes (s)</td><td>8</td><td>Quanto o clipe começa antes do primeiro abate. Mude e clique em Achar destaques de novo.</td></tr>
           <tr><td>Gravar depois (s)</td><td>4</td><td>Quanto o clipe continua depois do último abate.</td></tr>
@@ -196,7 +197,7 @@ footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px
       <li>O leitor de replays é o <a href="https://github.com/pnxenopoulos/boon" target="_blank" rel="noopener">boon</a>, de Peter Xenopoulos, de código aberto. Quando o Deadlock muda o formato dos replays, pode ser preciso atualizar o boon.</li>
     </ul>
 
-    <footer>Deadlock Highlights 1.0 · feito para a Refresher League · Leitura de replays: <a href="https://github.com/pnxenopoulos/boon" target="_blank" rel="noopener">boon</a> (MIT). Deadlock é uma marca da Valve; este app não é afiliado à Valve.</footer>
+    <footer>Deadlock Highlights 1.0.1 · feito para a Refresher League · Leitura de replays: <a href="https://github.com/pnxenopoulos/boon" target="_blank" rel="noopener">boon</a> (MIT). Deadlock é uma marca da Valve; este app não é afiliado à Valve.</footer>
   </main>
 </div>
 
