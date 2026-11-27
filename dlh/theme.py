@@ -53,7 +53,7 @@ def apply(root: tk.Tk) -> ttk.Style:
     style.map("TButton",
               background=[("disabled", p["bg"]), ("pressed", p["line"]),
                           ("active", p["line"])],
-              foreground=[("disabled", p["muted"])])
+              foreground=[("disabled", p["line"])])
     style.configure("Gold.TButton", background=p["gold"],
                     foreground=p["on_gold"], bordercolor=p["gold"],
                     font=(FONT_BOLD, 10), padding=(12, 6))

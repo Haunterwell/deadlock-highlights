@@ -50,17 +50,18 @@ class App(tk.Tk):
         ttk.Label(top, text=APP_NAME, style="Title.TLabel").pack(side="left")
         ttk.Label(top, text="multi-kills do replay  →  clipes no OBS", style="Sub.TLabel").pack(side="left", padx=12)
 
-        self.nb = ttk.Notebook(self)
-        self.nb.pack(fill="both", expand=True, padx=12, pady=8)
-        self._build_setup(ttk.Frame(self.nb, padding=12))
-        self._build_highlights(ttk.Frame(self.nb, padding=12))
-
         logf = ttk.LabelFrame(self, text="Mensagens", padding=6)
-        logf.pack(fill="x", padx=12, pady=(0, 10))
+        self.logf = logf
+        logf.pack(side="bottom", fill="x", padx=12, pady=(0, 10))
         self.logbox = tk.Text(logf, height=4, wrap="word", font=("Consolas", 9), state="disabled",
                               background=PALETTE["card"], foreground=PALETTE["muted"],
                               insertbackground=PALETTE["text"], relief="flat", highlightthickness=0)
         self.logbox.pack(fill="x")
+
+        self.nb = ttk.Notebook(self)
+        self.nb.pack(fill="both", expand=True, padx=12, pady=8)
+        self._build_setup(ttk.Frame(self.nb, padding=12))
+        self._build_highlights(ttk.Frame(self.nb, padding=12))
 
         self.protocol("WM_DELETE_WINDOW", self._on_close)
         self.after(100, self._pump)

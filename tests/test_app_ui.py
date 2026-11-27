@@ -30,6 +30,12 @@ class AppUiTests(unittest.TestCase):
         self.assertEqual(str(a.b_analyze.cget("style")), "Gold.TButton")
         self.assertEqual(str(a.b_rec.cget("style")), "Gold.TButton")
 
+    def test_log_frame_packed_at_bottom_before_notebook(self):
+        a = self.app
+        self.assertEqual(a.logf.pack_info()["side"], "bottom")
+        slaves = a.pack_slaves()
+        self.assertLess(slaves.index(a.logf), slaves.index(a.nb))
+
     def test_status_colors(self):
         a = self.app
         a._set(a.s_dir, True)

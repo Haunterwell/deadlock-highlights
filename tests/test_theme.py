@@ -34,6 +34,11 @@ class ThemeTests(unittest.TestCase):
         self.assertNotEqual(
             style.lookup("Gold.TButton", "background", ["disabled"]), "#C18D52")
 
+    def test_disabled_button_text_dimmed(self):
+        style = apply(self.root)
+        self.assertEqual(
+            style.lookup("TButton", "foreground", ["disabled"]), PALETTE["line"])
+
     def test_combobox_popup_dark(self):
         apply(self.root)
         cb = ttk.Combobox(self.root)
